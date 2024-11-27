@@ -1,0 +1,83 @@
+<!-- Build a basic app to fetch the records using API's with the help of AJAX.
+
+User story 1: Create a div with class container and apply some styling to center it on the screen
+
+User story 2: Inside the container create a form with a input field in it where user can enter a github username.
+
+User story 3: The input field must have a placeholder with text "Github username...".
+
+User story 4: Create a submit button to submit the form with github username.
+
+
+
+User story 5: When user submits the form prevent the form to be submitted with javascript preventDefault method.
+
+User story 6: Now create a GET request to https://api.github.com/users/'+ username +'/repos (replace the username with text entered in form).
+
+User story 7: Parse the JSON data received from the API call and display user repos on the screen in form of list.
+
+User story 8: When user clicks on repo lists redirect him to original repo link (open the link in new tab).  -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .container{
+            margin-top: 39vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form action="">
+            <input type="text" placeholder="Github username..." id="username">
+            <button type="submit">Fetch Repositories</button>
+        </form>
+        <ul class="Rlist"></ul>
+    </div>
+</body>
+</html>
+<script>
+    let form = document.querySelector("form");
+    
+
+    form.addEventListener('submit', function(e){
+        e.preventDefault();
+
+        let inp = document.querySelector("#username").value.trim();
+        const url = `https://api.github.com/users/${inp}/repos`;
+
+        const xhr = new XMLHttpRequest;
+
+        xhr.open('GET', url )
+       
+        xhr.onload = function(){
+            const response = JSON.parse(xhr.responseText)
+            console.log(response)
+            displayRepos(response);
+        }
+        xhr.send()
+    })
+
+    function displayRepos(repos){
+        const list = document.querySelector(".Rlist");
+        list.innerHTML = '';
+        repos.forEach(repo => {
+            const li = document.createElement('li');
+            const link = document.createElement('a');
+            link.href = repo.html_url;
+            link.target = '_blank';
+            link.innerText = repo.name;
+            li.appendChild(link);
+            list.appendChild(li);
+        });
+    }
+</script>
